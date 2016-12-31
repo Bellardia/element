@@ -45,7 +45,7 @@ Displays animation in a container (such as a table) while loading data.
 ```html
 <template>
   <el-table
-    v-loading.body="loading"
+    v-loading="{customClass: 'test', value: !loading}"
     :data="tableData"
     style="width: 100%">
     <el-table-column

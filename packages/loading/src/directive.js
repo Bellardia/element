@@ -5,7 +5,7 @@ let Mask = Vue.extend(require('./loading.vue'));
 exports.install = Vue => {
   if (Vue.prototype.$isServer) return;
   let toggleLoading = (el, binding) => {
-    if (binding.value) {
+    if ((typeof binding.value === 'object' && binding.value.value) || (typeof binding.value !== 'object' && binding.value)) {
       Vue.nextTick(() => {
         if (binding.modifiers.fullscreen) {
           el.originalPosition = document.body.style.position;
@@ -76,7 +76,8 @@ exports.install = Vue => {
         el: document.createElement('div'),
         data: {
           text: el.getAttribute('element-loading-text'),
-          fullscreen: !!binding.modifiers.fullscreen
+          fullscreen: !!binding.modifiers.fullscreen,
+          customClass: binding.value.customClass || ''
         }
       });
       el.mask = mask.$el;
