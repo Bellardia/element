@@ -109,7 +109,7 @@ const DEFAULT_RENDER_CELL = function(h, { row, column }) {
 };
 
 export default {
-  name: 'el-table-column',
+  name: 'ElTableColumn',
 
   props: {
     type: {
@@ -335,12 +335,16 @@ export default {
     align(newVal) {
       if (this.columnConfig) {
         this.columnConfig.align = newVal ? 'is-' + newVal : null;
+
+        if (!this.headerAlign) {
+          this.columnConfig.headerAlign = newVal ? 'is-' + newVal : null;
+        }
       }
     },
 
     headerAlign(newVal) {
       if (this.columnConfig) {
-        this.columnConfig.headerAlign = newVal ? 'is-' + newVal : this.align;
+        this.columnConfig.headerAlign = 'is-' + (newVal ? newVal : this.align);
       }
     },
 

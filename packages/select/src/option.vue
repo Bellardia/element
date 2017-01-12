@@ -21,7 +21,7 @@
   export default {
     mixins: [Emitter],
 
-    name: 'el-option',
+    name: 'ElOption',
 
     componentName: 'ElOption',
 
@@ -88,10 +88,10 @@
 
     watch: {
       currentLabel() {
-        this.dispatch('ElSelect', 'setSelected');
+        if (!this.created) this.dispatch('ElSelect', 'setSelected');
       },
       value() {
-        this.dispatch('ElSelect', 'setSelected');
+        if (!this.created) this.dispatch('ElSelect', 'setSelected');
       }
     },
 
