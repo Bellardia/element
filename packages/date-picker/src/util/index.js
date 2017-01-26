@@ -13,12 +13,12 @@ export const equalDate = function(dateA, dateB) {
 };
 
 export const toDate = function(date) {
-  return isDate(date) ? date : null;
+  return isDate(date) ? new Date(date) : null;
 };
 
 export const isDate = function(date) {
-  date = new Date(date);
-  if (isNaN(date.getTime())) return false;
+  if (date === null || date === undefined) return false;
+  if (isNaN(new Date(date).getTime())) return false;
   return true;
 };
 
