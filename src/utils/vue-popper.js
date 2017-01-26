@@ -47,7 +47,8 @@ export default {
   data() {
     return {
       showPopper: false,
-      currentPlacement: ''
+      currentPlacement: '',
+      contentProxy: ''
     };
   },
 
@@ -59,9 +60,23 @@ export default {
         this.$emit('input', val);
       }
     },
-
+    content(newValue) {
+      var self = this;
+      if (this.showPopper === false) {
+        this.proxyTimeout = setTimeout(function() {
+          self.contentProxy = newValue || '';
+        }, 300);
+      } else {
+        clearTimeout(this.proxyTimeout);
+        self.contentProxy = newValue || '';
+      }
+    },
     showPopper(val) {
-      val ? this.updatePopper() : this.destroyPopper();
+      val && this.contentProxy.length > 0 ? this.updatePopper() : this.destroyPopper();
+      this.$emit('input', val);
+    },
+    contentProxy(val) {
+      val && this.contentProxy.length > 0 ? this.updatePopper() : this.destroyPopper();
       this.$emit('input', val);
     }
   },

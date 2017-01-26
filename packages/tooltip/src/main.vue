@@ -12,8 +12,8 @@
         class="el-tooltip__popper"
         :class="['is-' + effect, popperClass]"
         ref="popper"
-        v-show="!disabled && showPopper">
-        <slot name="content"><div v-text="content"></div></slot>
+        v-show="!disabled && showPopper && contentProxy.length > 0">
+        <slot name="content"><div v-text="contentProxy"></div></slot>
       </div>
     </transition>
   </div>
@@ -56,7 +56,6 @@ export default {
       }
     }
   },
-
   methods: {
     handleShowPopper() {
       if (this.manual) return;
