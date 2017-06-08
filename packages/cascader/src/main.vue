@@ -139,12 +139,16 @@ export default {
     debounce: {
       type: Number,
       default: 300
+    },
+    beforeFilter: {
+      type: Function,
+      default: () => (() => {})
     }
   },
 
   data() {
     return {
-      currentValue: this.value,
+      currentValue: this.value || [],
       menu: null,
       debouncedInputChange() {},
       menuVisible: false,
@@ -211,6 +215,7 @@ export default {
       this.popperElm = this.menu.$el;
       this.menu.$on('pick', this.handlePick);
       this.menu.$on('activeItemChange', this.handleActiveItemChange);
+      this.menu.$on('menuLeave', this.doDestroy);
     },
     showMenu() {
       if (!this.menu) {
@@ -220,8 +225,8 @@ export default {
       this.menu.value = this.currentValue.slice(0);
       this.menu.visible = true;
       this.menu.options = this.options;
-      this.updatePopper();
       this.$nextTick(_ => {
+        this.updatePopper();
         this.menu.inputWidth = this.$refs.input.$el.offsetWidth - 2;
       });
     },
@@ -242,6 +247,8 @@ export default {
 
       if (close) {
         this.menuVisible = false;
+      } else {
+        this.$nextTick(this.updatePopper);
       }
     },
     handleInputChange(value) {
@@ -250,6 +257,7 @@ export default {
 
       if (!value) {
         this.menu.options = this.options;
+        this.$nextTick(this.updatePopper);
         return;
       }
 
@@ -274,6 +282,7 @@ export default {
         }];
       }
       this.menu.options = filteredFlatOptions;
+      this.$nextTick(this.updatePopper);
     },
     renderFilteredOptionLabel(inputValue, optionsStack) {
       return optionsStack.map((option, index) => {
@@ -318,6 +327,7 @@ export default {
       if (this.disabled) return;
       if (this.filterable) {
         this.menuVisible = true;
+        this.$refs.input.$refs.input.focus();
         return;
       }
       this.menuVisible = !this.menuVisible;
@@ -326,7 +336,26 @@ export default {
 
   created() {
     this.debouncedInputChange = debounce(this.debounce, value => {
-      this.handleInputChange(value);
+      const before = this.beforeFilter(value);
+
+      if (before && before.then) {
+        this.menu.options = [{
+          __IS__FLAT__OPTIONS: true,
+          label: this.t('el.cascader.loading'),
+          value: '',
+          disabled: true
+        }];
+        before
+          .then(() => {
+            this.$nextTick(() => {
+              this.handleInputChange(value);
+            });
+          });
+      } else if (before !== false) {
+        this.$nextTick(() => {
+          this.handleInputChange(value);
+        });
+      }
     });
   },
 

@@ -1,4 +1,6 @@
 <script>
+  import { isDef } from 'element-ui/src/utils/shared';
+
   export default {
     name: 'ElCascaderMenu',
 
@@ -54,7 +56,7 @@
             const level = activeOptions.length;
             activeOptions[level] = options;
             let active = activeValue[level];
-            if (active) {
+            if (isDef(active)) {
               options = options.filter(option => option.value === active)[0];
               if (options && options.children) {
                 loadActiveOptions(options.children, activeOptions);
@@ -73,10 +75,15 @@
       select(item, menuIndex) {
         if (item.__IS__FLAT__OPTIONS) {
           this.activeValue = item.value;
+        } else if (menuIndex) {
+          this.activeValue.splice(menuIndex, this.activeValue.length - 1, item.value);
         } else {
-          this.activeValue.splice(menuIndex, 1, item.value);
+          this.activeValue = [item.value];
         }
         this.$emit('pick', this.activeValue);
+      },
+      handleMenuLeave() {
+        this.$emit('menuLeave');
       },
       activeItem(item, menuIndex) {
         const len = this.activeOptions.length;
@@ -151,7 +158,7 @@
         );
       });
       return (
-        <transition name="el-zoom-in-top">
+        <transition name="el-zoom-in-top" on-after-leave={this.handleMenuLeave}>
           <div
             v-show={visible}
             class={[

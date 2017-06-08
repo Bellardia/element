@@ -15,11 +15,10 @@
 @import "./radio-group.css";
 @import "./radio-button.css";
 @import "./checkbox.css";
+@import "./checkbox-button.css";
 @import "./checkbox-group.css";
 @import "./switch.css";
 @import "./select.css";
-@import "./option.css";
-@import "./option-group.css";
 @import "./button.css";
 @import "./button-group.css";
 @import "./table.css";
@@ -42,7 +41,6 @@
 @import "./notification.css";
 @import "./slider.css";
 @import "./loading.css";
-@import "./icon.css";
 @import "./row.css";
 @import "./col.css";
 @import "./upload.css";
@@ -61,3 +59,4 @@
 @import "./collapse-item.css";
 @import "./cascader.css";
 @import "./color-picker.css";
+@import "./transfer.css";

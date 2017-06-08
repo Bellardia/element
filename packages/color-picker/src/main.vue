@@ -22,9 +22,6 @@
   </div>
 </template>
 
-<style>
-</style>
-
 <script>
   import Color from './color';
   import PickerDropdown from './components/picker-dropdown.vue';
@@ -62,7 +59,9 @@
 
     watch: {
       value(val) {
-        if (val && val !== this.color.value) {
+        if (!val) {
+          this.showPanelColor = false;
+        } else if (val && val !== this.color.value) {
           this.color.fromString(val);
         }
       },
@@ -77,10 +76,12 @@
     methods: {
       confirmValue(value) {
         this.$emit('input', this.color.value);
+        this.$emit('change', this.color.value);
         this.showPicker = false;
       },
       clearValue() {
         this.$emit('input', null);
+        this.$emit('change', null);
         this.showPanelColor = false;
         this.showPicker = false;
         this.resetColor();

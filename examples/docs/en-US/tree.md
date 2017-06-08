@@ -1,3 +1,25 @@
+<style>
+  .demo-tree {
+    .leaf {
+      width: 20px;
+      background: #ddd;
+    }
+
+    .folder {
+      width: 20px;
+      background: #888;
+    }
+
+    .buttons {
+      margin-top: 20px;
+    }
+
+    .filter-tree {
+      margin-top: 20px;
+    }
+  }
+</style>
+
 <script>
   const data = [{
     label: 'Level one 1',
@@ -114,11 +136,11 @@
         if (node.data.name === 'region1') {
           hasChild = true;
         } else if (node.data.name === 'region2') {
-          hasChild = false;          
+          hasChild = false;
         } else {
           hasChild = Math.random() > 0.5;
         }
-    
+
         setTimeout(function() {
           let data;
           if (hasChild) {
@@ -130,7 +152,7 @@
           } else {
             data = [];
           }
-    
+
           resolve(data);
         }, 500);
       },
@@ -153,7 +175,7 @@
         ]);
       },
       setCheckedKeys() {
-        this.$refs.tree.setCheckedKeys([8]);
+        this.$refs.tree.setCheckedKeys([3]);
       },
       resetChecked() {
         this.$refs.tree.setCheckedKeys([]);
@@ -161,14 +183,14 @@
       append(store, data) {
         store.append({ id: id++, label: 'testtest', children: [] }, data);
       },
-  
+
       remove(store, data) {
         store.remove(data);
       },
-  
+
       renderContent(h, { node, data, store }) {
         return (
-          <span>
+          <span style="white-space: normal">
             <span>
               <span>{node.label}</span>
             </span>
@@ -178,13 +200,13 @@
             </span>
           </span>);
       },
-  
+
       filterNode(value, data) {
         if (!value) return true;
         return data.label.indexOf(value) !== -1;
       }
     },
-    
+
     data() {
       return {
         data,
@@ -200,7 +222,7 @@
   };
 </script>
 
-## Tree 
+## Tree
 
 Display a set of data with hierarchies.
 
@@ -446,13 +468,13 @@ Tree nodes can be initially expanded or checked
         }]);
       },
       setCheckedKeys() {
-        this.$refs.tree.setCheckedKeys([8]);
+        this.$refs.tree.setCheckedKeys([3]);
       },
       resetChecked() {
         this.$refs.tree.setCheckedKeys([]);
       }
     },
-    
+
     data() {
       return {
         data2: [{
@@ -504,7 +526,7 @@ Tree nodes can be initially expanded or checked
 ### Custom node content
 The content of tree nodes can be customized, so you can add icons or buttons as you will
 
-::: demo Use `render-content` to assign a render function that returns the content of tree nodes. See Vue's documentation for a detailed introduction of render functions.
+::: demo Use `render-content` to assign a render function that returns the content of tree nodes. See Vue's documentation for a detailed introduction of render functions. Note that this demo can't run in jsfiddle because it doesn't support JSX syntax. In a real project, `render-content` will work if relevant dependencies are correctly configured.
 ```html
 <el-tree
   :data="data2"
@@ -518,7 +540,7 @@ The content of tree nodes can be customized, so you can add icons or buttons as 
 
 <script>
   let id = 1000;
-  
+
   export default {
     data() {
       return {
@@ -563,16 +585,16 @@ The content of tree nodes can be customized, so you can add icons or buttons as 
         }
       }
     },
-    
+
     methods: {
       append(store, data) {
         store.append({ id: id++, label: 'testtest', children: [] }, data);
       },
-      
+
       remove(store, data) {
         store.remove(data);
       },
-      
+
       renderContent(h, { node, data, store }) {
         return (
           <span>
@@ -777,8 +799,8 @@ Only one node among the same level can be expanded at one time.
 | filter          | filter all tree nodes, filtered nodes will be hidden | Accept a parameter which will be used as first parameter for filter-node-method |
 | getCheckedNodes | If the node can be selected (`show-checkbox` is `true`), it returns the currently selected array of nodes | Accept a boolean type parameter whose default value is `false`. If the parameter is `true`, it only returns the currently selected array of sub-nodes. |
 | setCheckedNodes | set certain nodes to be checked, only works when `node-key` is assigned | an array of nodes to be checked          |
-| getCheckedKeys  | If the node can be selected (`show-checkbox` is `true`), it returns the currently selected array of node's keys | (leafOnly) Accept a boolean type parameter whose default value is `true`. If the parameter is `true`, it only returns the currently selected array of sub-nodes. |
-| setCheckedKeys  | set certain nodes to be checked, only works when `node-key` is assigned | (keys, leafOnly) Accept two parameters: 1. an array of node's keys to be checked 2. a boolean type parameter whose default value is `true`. If the parameter is `true`, it only returns the currently selected array of sub-nodes. |
+| getCheckedKeys  | If the node can be selected (`show-checkbox` is `true`), it returns the currently selected array of node's keys | (leafOnly) Accept a boolean type parameter whose default value is `false`. If the parameter is `true`, it only returns the currently selected array of sub-nodes. |
+| setCheckedKeys  | set certain nodes to be checked, only works when `node-key` is assigned | (keys, leafOnly) Accept two parameters: 1. an array of node's keys to be checked 2. a boolean type parameter whose default value is `false`. If the parameter is `true`, it only returns the currently selected array of sub-nodes. |
 | setChecked      | set node to be checked or not, only works when `node-key` is assigned | (key/data, checked, deep) Accept three parameters: 1. node's key or data to be checked 2. a boolean typed parameter indicating checked or not. 3. a boolean typed parameter indicating deep or not. |
 
 ### Events
@@ -789,4 +811,3 @@ Only one node among the same level can be expanded at one time.
 | current-change | triggers when current node changes       | two parameters: node object corresponding to the current node, `node` property of TreeNode |
 | node-expand    | triggers when current node open          | three parameters: node object corresponding to the node opened, `node` property of TreeNode, TreeNode itself |
 | node-collapse  | triggers when current node close         | three parameters: node object corresponding to the node closed, `node` property of TreeNode, TreeNode itself |
-

@@ -20,7 +20,6 @@
     @e label {
       transition: .2s;
       position: absolute;
-      z-index: 10;
       size: var(--switch-width) var(--switch-height);
       left: 0;
       top: 0;
@@ -50,10 +49,6 @@
 
     @e input {
       display: none;
-      &:checked + .el-switch__core {
-        border-color: var(--switch-on-color);
-        background-color: var(--switch-on-color);
-      }
     }
 
     @e core {
@@ -74,8 +69,14 @@
         border-radius: var(--border-radius-circle);
         transition: transform .3s;
         size: var(--switch-button-size);
-        z-index: 20;
         background-color: var(--color-white);
+      }
+    }
+
+    @when checked {
+      .el-switch__core {
+        border-color: var(--switch-on-color);
+        background-color: var(--switch-on-color);
       }
     }
 
@@ -91,11 +92,6 @@
         & ~ .el-switch__label * {
           color: var(--switch-disabled-text-color) !important;
         }
-      }
-
-      .el-switch__input:checked + .el-switch__core {
-        border-color: var(--switch-disabled-color);
-        background-color: var(--switch-disabled-color);
       }
     }
 

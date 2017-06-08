@@ -14,7 +14,7 @@
     <tr
       class="el-date-table__row"
       v-for="row in rows"
-      :class="{ current: value && isWeekActive(row[1]) }">
+      :class="{ current: isWeekActive(row[1]) }">
       <td
         v-for="cell in row"
         :class="getCellClasses(cell)"
@@ -32,7 +32,9 @@
   const WEEKS = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
   const clearHours = function(time) {
     const cloneDate = new Date(time);
-    cloneDate.setHours(0, 0, 0, 0);
+    const timeZoneOffset = cloneDate.getTimezoneOffset();
+    const timeZone = timeZoneOffset >= 0 ? 24 - timeZoneOffset / 60 : Math.abs(timeZoneOffset) / 60;
+    cloneDate.setHours(timeZone, 0, 0, 0);
     return cloneDate.getTime();
   };
 
@@ -78,9 +80,7 @@
             column: null
           };
         }
-      },
-
-      value: {}
+      }
     },
 
     computed: {

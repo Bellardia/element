@@ -1,5 +1,5 @@
 <template>
-  <div class="el-autocomplete" v-clickoutside="handleClickoutside">
+  <div class="el-autocomplete">
     <el-input
       ref="input"
       :value="value"
@@ -9,12 +9,15 @@
       :size="size"
       :icon="icon"
       :on-icon-click="onIconClick"
+      @compositionstart.native="handleComposition"
+      @compositionupdate.native="handleComposition"
+      @compositionend.native="handleComposition"
       @change="handleChange"
       @focus="handleFocus"
       @blur="handleBlur"
       @keydown.up.native.prevent="highlight(highlightedIndex - 1)"
       @keydown.down.native.prevent="highlight(highlightedIndex + 1)"
-      @keydown.enter.stop.native="handleKeyEnter"
+      @keydown.enter.native.prevent="handleKeyEnter"
     >
       <template slot="prepend" v-if="$slots.prepend">
         <slot name="prepend"></slot>
@@ -33,7 +36,6 @@
 </template>
 <script>
   import ElInput from 'element-ui/packages/input';
-  import Clickoutside from 'element-ui/src/utils/clickoutside';
   import ElAutocompleteSuggestions from './autocomplete-suggestions.vue';
   import Emitter from 'element-ui/src/mixins/emitter';
 
@@ -48,8 +50,6 @@
       ElInput,
       ElAutocompleteSuggestions
     },
-
-    directives: { Clickoutside },
 
     props: {
       popperClass: String,
@@ -71,6 +71,7 @@
     data() {
       return {
         isFocus: false,
+        isOnComposition: false,
         suggestions: [],
         loading: false,
         highlightedIndex: -1
@@ -100,9 +101,17 @@
           }
         });
       },
+      handleComposition(event) {
+        if (event.type === 'compositionend') {
+          this.isOnComposition = false;
+          this.handleChange(this.value);
+        } else {
+          this.isOnComposition = true;
+        }
+      },
       handleChange(value) {
         this.$emit('input', value);
-        if (!this.triggerOnFocus && !value) {
+        if (this.isOnComposition || (!this.triggerOnFocus && !value)) {
           this.suggestions = [];
           return;
         }
@@ -124,9 +133,6 @@
         if (this.suggestionVisible && this.highlightedIndex >= 0 && this.highlightedIndex < this.suggestions.length) {
           this.select(this.suggestions[this.highlightedIndex]);
         }
-      },
-      handleClickoutside() {
-        this.isFocus = false;
       },
       select(item) {
         this.$emit('input', item.value);
